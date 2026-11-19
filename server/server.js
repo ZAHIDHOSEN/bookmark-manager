@@ -1,16 +1,30 @@
+import dotenv from "dotenv"
 import mongoose from "mongoose"
+import app from "./app.js"
 
+
+dotenv.config()
+
+const URL = process.env.DB_URL
+const PORT = process.env.PORT || 5000
 
 const connectDB = async()=>{
     try {
-        await mongoose.connect()
+        await mongoose.connect(URL) 
+        console.log("connect to db")
     } catch (error) {
        console.log("some error to start server",error) 
-       res.status(500).json({
-        message: "Internal server error"
-       })
+       process.exit(1);
     }
 }
 
 
-connectDB()
+const startServer = async()=>{
+    await connectDB()
+    app.listen(PORT, ()=>{
+        console.log(`server is running on port: ${PORT}`)
+    })
+}
+
+
+startServer()
