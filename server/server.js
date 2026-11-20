@@ -21,10 +21,14 @@ const connectDB = async()=>{
 
 const startServer = async()=>{
     await connectDB()
-    app.listen(PORT, ()=>{
-        console.log(`server is running on port: ${PORT}`)
+    if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+      console.log(`server is running on port: ${PORT}`)
     })
+  }
 }
 
 
 startServer()
+
+export default app
