@@ -24,6 +24,42 @@ const getBookmarks = async(req, res)=>{
 }
 
 
+const createBookmark = async(req,res)=>{
+  try {
+     const data = req.body
+     const bookmark = await Bookmark.create(data)
+     res.status(201).json(bookmark)
+
+  } catch (error) {
+    if(error.name === "ValidationError"){
+      return res.status(400).json({message:error.message});
+
+    }
+    res.status(500).json({message:"Failed to create bookmark",error:error.message})
+    
+  }
+}
+
+
+const toggleFavorite = async(req,res)=>{
+  try {
+    const id = req.params.id
+    const bookmark = await Bookmark.findById(id)
+
+    if(!bookmark){
+      return res.status(404).json({message:"Bookmark not found"});
+
+    }
+    bookmark.isFavorite = !bookmark.isFavorite;
+    await bookmark.save()
+    res.status(200).json(bookmark)
+     
+  } catch (error) {
+    res.status(400).json({message:"Failed to toggle favorite",error:error.message})
+
+  }
+}
+ 
 
 
 
@@ -32,5 +68,7 @@ const getBookmarks = async(req, res)=>{
 
 
 export const BookmarkController = {
-    getBookmarks
+    getBookmarks,
+    createBookmark,
+    toggleFavorite
 }
