@@ -61,6 +61,23 @@ const toggleFavorite = async(req,res)=>{
 }
  
 
+const deleteBookmark = async(req,res)=>{
+ try {
+   const id = req.params.id
+   const bookmark =   await Bookmark.findByIdAndDelete(id)
+
+   if (!bookmark) {
+      return res.status(404).json({ message: "Bookmark not found" });
+    }
+
+    res.status(200).json({message:"Bookmark deleted successfully"})
+
+ } catch (error) {
+   res.status(400).json({message:"Failed to delete bookmark",error:error.message})
+  
+ }
+}
+
 
 
 
@@ -70,5 +87,6 @@ const toggleFavorite = async(req,res)=>{
 export const BookmarkController = {
     getBookmarks,
     createBookmark,
-    toggleFavorite
+    toggleFavorite,
+    deleteBookmark
 }
